@@ -15,10 +15,10 @@ export class User {
   password: string;
 
   @Column()
-  phone: string;
+  role: string;
 
-  @Column()
-  username: string;
+  @Column({ unique: true })
+  mobile: string;
 
   @Column({ default: true })
   isActive: boolean;

@@ -7,7 +7,7 @@ import {
   HttpStatus,
   Param,
 } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, GetUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import {
   ApiCreatedResponse,
@@ -29,6 +29,7 @@ export class UsersController {
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async registerUser(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -42,7 +43,8 @@ export class UsersController {
   @Get('/:id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getUser(@Param('id') id: string): Promise<User> {
-    return this.usersService.findOne(+id);
+  async getUser(@Param('id') id: string): Promise<GetUserDto> {
+    const user = await this.usersService.findOne(+id);
+    return new GetUserDto({ ...user });
   }
 }

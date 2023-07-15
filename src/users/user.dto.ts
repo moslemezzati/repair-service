@@ -1,5 +1,6 @@
 import { IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -28,12 +29,25 @@ export class CreateUserDto {
     description: 'This is a required property',
   })
   @IsString()
-  phone: string;
+  mobile: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: String,
     description: 'This is a required property',
   })
   @IsString()
-  username: string;
+  role: string;
+}
+export class GetUserDto {
+  firstName: string;
+  lastName: string;
+  mobile: string;
+  role: string;
+
+  @Exclude()
+  password: string;
+
+  constructor(partial: Partial<GetUserDto>) {
+    Object.assign(this, partial);
+  }
 }
