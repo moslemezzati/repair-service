@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { FactoryModule } from './factory/factory.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { FactoryModule } from './factory/factory.module';
     }),
     UsersModule,
     AuthModule,
-    FactoryModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [

@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { FactoryService } from './factory.service';
-import { CreateFactoryDto } from './dto/create-factory.dto';
-import { UpdateFactoryDto } from './dto/update-factory.dto';
+import { CompanyService } from './company.service';
+import { CreateCompanyDto } from './dto/create-Company.dto';
+import { UpdateCompanyDto } from './dto/update-Company.dto';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -18,42 +18,42 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-@ApiTags('factory')
-@Controller('factory')
-export class FactoryController {
-  constructor(private readonly factoryService: FactoryService) {}
+@ApiTags('company')
+@Controller('company')
+export class CompanyController {
+  constructor(private readonly companyService: CompanyService) {}
 
   @Post()
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createFactoryDto: CreateFactoryDto) {
-    return this.factoryService.create(createFactoryDto);
+  create(@Body() createCompanyDto: CreateCompanyDto) {
+    return this.companyService.create(createCompanyDto);
   }
 
   @Get()
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   findAll() {
-    return this.factoryService.findAll();
+    return this.companyService.findAll();
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   findOne(@Param('id') id: string) {
-    return this.factoryService.findOne(+id);
+    return this.companyService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  update(@Param('id') id: string, @Body() updateFactoryDto: UpdateFactoryDto) {
-    return this.factoryService.update(+id, updateFactoryDto);
+  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
+    return this.companyService.update(+id, updateCompanyDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   remove(@Param('id') id: string) {
-    return this.factoryService.remove(+id);
+    return this.companyService.remove(+id);
   }
 }
