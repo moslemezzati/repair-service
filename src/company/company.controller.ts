@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-Company.dto';
@@ -41,8 +42,12 @@ export class CompanyController {
   @Get(':id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const company = await this.companyService.findOne(+id);
+    if (!company) {
+      throw new BadRequestException('Invalid company');
+    }
+    return company;
   }
 
   @Patch(':id')
