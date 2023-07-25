@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CompanyModule } from './company/company.module';
     UsersModule,
     AuthModule,
     CompanyModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [
