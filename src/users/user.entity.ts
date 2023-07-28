@@ -1,4 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Company } from '../company/entities/company.entity';
+
+export enum Roles {
+  ADMIN = 'admin',
+  TECHNICIAN = 'technician',
+}
 
 @Entity()
 export class User {
@@ -14,7 +26,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ type: 'enum', enum: Roles, default: Roles.TECHNICIAN })
   role: string;
 
   @Column({ unique: true })
@@ -22,4 +34,8 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToOne(() => Company)
+  @JoinColumn()
+  company: Company;
 }
