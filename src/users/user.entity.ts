@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Company } from '../company/entities/company.entity';
 
 export enum Roles {
@@ -35,7 +29,6 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToOne(() => Company)
-  @JoinColumn()
+  @ManyToOne(() => Company)
   company: Company;
 }
