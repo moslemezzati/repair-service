@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ItemModule } from './item/item.module';
     AuthModule,
     CompanyModule,
     ItemModule,
+    ServiceModule,
   ],
   controllers: [AppController],
   providers: [
