@@ -1,13 +1,15 @@
 import {
-  Controller,
-  Post,
-  Get,
   Body,
+  Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { CreateUserDto, GetUserDto } from './user.dto';
+import { CreateUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import {
   ApiCreatedResponse,
@@ -30,21 +32,35 @@ export class UsersController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async registerUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
-    return this.usersService.create(createUserDto);
+    return this.usersService.upsert(createUserDto);
   }
 
   @Get('/')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getUsers(): Promise<User[]> {
-    return this.usersService.findAll();
+  async findAll(
+    @Query()
+    query: {
+      take: number;
+      page: number;
+      search: string;
+      role: string;
+    },
+  ) {
+    return this.usersService.findAll({ ...query });
   }
 
   @Get('/:id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getUser(@Param('id') id: string): Promise<GetUserDto> {
+  async getUser(@Param('id') id: string): Promise<User> {
     const user = await this.usersService.findOne(+id);
-    return new GetUserDto({ ...user });
+    return { ...user };
+  }
+
+  @Delete(':id')
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }

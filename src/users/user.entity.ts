@@ -31,4 +31,6 @@ export class User {
 
   @ManyToOne(() => Company)
   company: Company;
+
+  companyId: number;
 }

@@ -1,16 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
-import { CreateCompanyDto } from './dto/create-Company.dto';
-import { UpdateCompanyDto } from './dto/update-Company.dto';
+import { CreateCompanyDto } from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -18,6 +19,7 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
 
 @ApiTags('company')
 @Controller('company')
@@ -35,8 +37,19 @@ export class CompanyController {
   @Get()
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  findAll() {
-    return this.companyService.findAll();
+  @ApiImplicitQuery({
+    name: 'take',
+    required: false,
+    type: Number,
+  })
+  @ApiImplicitQuery({
+    name: 'skip',
+    required: false,
+    type: Number,
+  })
+  findAll(@Query() query: { take: number; page: number; search: string }) {
+    const { take, page, search } = query;
+    return this.companyService.findAll({ take, page, search });
   }
 
   @Get(':id')

@@ -1,11 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -32,8 +33,16 @@ export class ItemController {
   @Get()
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  findAll() {
-    return this.itemService.findAll();
+  findAll(
+    @Query()
+    query: {
+      take: number;
+      page: number;
+      search: string;
+      role: string;
+    },
+  ) {
+    return this.itemService.findAll(query);
   }
 
   @Get(':id')

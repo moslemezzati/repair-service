@@ -20,6 +20,7 @@ import { ServiceModule } from './service/service.module';
       database: 'repair',
       autoLoadEntities: true,
       synchronize: true,
+      logging: 'all',
     }),
     UsersModule,
     AuthModule,
