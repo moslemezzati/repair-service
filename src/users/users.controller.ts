@@ -7,9 +7,10 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import {
   ApiCreatedResponse,
@@ -32,7 +33,7 @@ export class UsersController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async registerUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
-    return this.usersService.upsert(createUserDto);
+    return this.usersService.insert(createUserDto);
   }
 
   @Get('/')
@@ -58,9 +59,19 @@ export class UsersController {
     return { ...user };
   }
 
+  @Put('/:id')
+  @ApiOkResponse({ description: 'The resources were returned successfully' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  async updateUser(
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: number,
+  ): Promise<User> {
+    return this.usersService.update({ ...updateUserDto, id });
+  }
+
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  remove(@Param('id') id: string) {
+  remove(@Body() id: string) {
     return this.usersService.remove(+id);
   }
 }

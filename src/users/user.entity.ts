@@ -32,5 +32,6 @@ export class User {
   @ManyToOne(() => Company)
   company: Company;
 
+  @Column({ default: null })
   companyId: number;
 }

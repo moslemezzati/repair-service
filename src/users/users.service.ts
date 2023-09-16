@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Roles, User } from './user.entity';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { Company } from '../company/entities/company.entity';
 
 @Injectable()
@@ -71,14 +71,27 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async upsert(userData: CreateUserDto): Promise<any> {
-    const { companyId, ...data } = userData;
-    const user = await this.usersRepository.save({
-      ...data,
-      company: companyId as unknown as Company,
-    });
-    console.log('upsert', user);
-    return user;
+  async insert(userData: CreateUserDto): Promise<any> {
+    const query = await this.usersRepository
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values(userData)
+      .execute();
+
+    console.log('insert', query);
+    return query;
+  }
+
+  async update(userData: UpdateUserDto): Promise<any> {
+    const query = await this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set(userData)
+      .where('id = :id', { id: userData.id })
+      .execute();
+    console.log('update', query);
+    return query;
   }
 
   async findUsersByCompanyId(id: number): Promise<User> {

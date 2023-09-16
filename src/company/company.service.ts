@@ -6,6 +6,7 @@ import { Company } from './entities/company.entity';
 import { ILike, Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/user.dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class CompanyService {
@@ -62,17 +63,17 @@ export class CompanyService {
   async remove(id: number) {
     const users = (await this.usersService.findUsersByCompanyId(
       id,
-    )) as unknown as CreateUserDto[];
+    )) as unknown as User[];
     if (Array.isArray(users)) {
       await Promise.all(
         users.map((user) => {
           user.companyId = null;
-          return this.usersService.upsert(user);
+          return this.usersService.update(user);
         }),
       );
     } else {
-      (users as CreateUserDto).companyId = null;
-      await this.usersService.upsert(users);
+      (users as User).companyId = null;
+      await this.usersService.update(users);
     }
     await this.companyRepository.query('SET FOREIGN_KEY_CHECKS=0');
     const result = await this.companyRepository.delete(id);

@@ -49,6 +49,10 @@ export class CreateUserDto {
   companyId: number;
 }
 
+export class UpdateUserDto extends CreateUserDto {
+  id: number;
+}
+
 export class GetUserDto {
   firstName: string;
   lastName: string;
