@@ -71,7 +71,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  remove(@Body() id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.usersService.remove(id);
   }
 }

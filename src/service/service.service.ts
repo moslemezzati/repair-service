@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
 import { ILike, Repository } from 'typeorm';
 import { Item } from '../item/entities/item.entity';
-import { User } from '../users/user.entity';
 
 @Injectable()
 export class ServiceService {
@@ -83,7 +82,7 @@ export class ServiceService {
         description: serviceData.description,
         name: serviceData.name,
         itemNumber: serviceData.itemNumber,
-        item: serviceData.itemId as unknown as Item,
+        itemId: serviceData.itemId,
       })
       .where('id = :id', { id: serviceData.id })
       .execute();

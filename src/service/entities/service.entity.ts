@@ -26,11 +26,17 @@ export class Service {
   item: Item;
 
   @Column()
+  itemId: number;
+
+  @Column()
   itemNumber: number;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: number;
 
   @CreateDateColumn({
     type: 'timestamp',
