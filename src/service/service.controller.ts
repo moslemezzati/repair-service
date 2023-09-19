@@ -1,11 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -16,6 +17,7 @@ import {
   ApiOkResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
 
 @Controller('service')
 export class ServiceController {
@@ -32,8 +34,18 @@ export class ServiceController {
   @Get()
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  findAll() {
-    return this.serviceService.findAll();
+  @ApiImplicitQuery({
+    name: 'take',
+    required: false,
+    type: Number,
+  })
+  @ApiImplicitQuery({
+    name: 'skip',
+    required: false,
+    type: Number,
+  })
+  findAll(@Query() query: { take: number; page: number; search: string }) {
+    return this.serviceService.findAll(query);
   }
 
   @Get(':id')
@@ -43,10 +55,10 @@ export class ServiceController {
     return this.serviceService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
-    return this.serviceService.update(+id, updateServiceDto);
+  update(@Param('id') id: number, @Body() updateServiceDto: CreateServiceDto) {
+    return this.serviceService.update({ ...updateServiceDto, id });
   }
 
   @Delete(':id')

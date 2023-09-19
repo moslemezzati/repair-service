@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -20,23 +21,23 @@ export class Service {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => Item)
+  @ManyToOne(() => Item, { nullable: true })
+  @JoinColumn({ name: 'itemId' })
   item: Item;
 
-  @Column({ name: 'item_number' })
+  @Column()
   itemNumber: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @CreateDateColumn({
     type: 'timestamp',
-    name: 'created_at',
   })
   public createdAt: Date;
 
   @UpdateDateColumn({
-    name: 'updated_at',
     type: 'timestamp',
   })
   public updatedAt: Date;

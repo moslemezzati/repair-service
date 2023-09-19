@@ -3,8 +3,9 @@ import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Item } from '../item/entities/item.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class ServiceService {
@@ -14,27 +15,78 @@ export class ServiceService {
   ) {}
 
   create(serviceData: CreateServiceDto) {
-    const { itemId, ...data } = serviceData;
-    return this.serviceRepository.save({
-      ...data,
-      item: itemId as unknown as Item,
+    return this.serviceRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Service)
+      .values(serviceData)
+      .execute();
+  }
+
+  async findAll({
+    take = 100,
+    page = 1,
+    search,
+  }: {
+    take: number;
+    page: number;
+    search?: string;
+  }): Promise<{
+    services: Service[];
+    total: number;
+    pages: number;
+    page: number;
+    take: number;
+  }> {
+    take = +take;
+    const skip = (page - 1) * take || 0;
+    const where = [];
+    if (search) {
+      where.push({ address: ILike(`%${search}%`) });
+      where.push({ name: ILike(`%${search}%`) });
+    }
+    const [services, total] = await this.serviceRepository.findAndCount({
+      take,
+      skip,
+      where,
     });
+    const pages = Math.ceil(total / take);
+    return { services, total, pages, page, take };
   }
 
-  findAll() {
-    return this.serviceRepository.find();
+  async findOne(serviceId: number) {
+    const result = await this.serviceRepository
+      .createQueryBuilder('service')
+      .leftJoinAndSelect('service.item', 'item')
+      .where('service.id = :id', { id: serviceId })
+      .select(['service', 'item.id', 'item.name']) // Select the required columns
+      .getOne();
+
+    const { id, name, description, item, itemNumber } = result;
+    const { id: itemId } = item;
+
+    return {
+      id,
+      name,
+      description,
+      itemId,
+      itemNumber,
+    };
   }
 
-  findOne(id: number) {
-    return this.serviceRepository.findOneBy({ id });
-  }
-
-  update(id: number, serviceData: UpdateServiceDto) {
-    const { itemId, ...data } = serviceData;
-    return this.serviceRepository.save({
-      ...data,
-      item: itemId as unknown as Item,
-    });
+  update(serviceData: UpdateServiceDto) {
+    console.log(serviceData);
+    return this.serviceRepository
+      .createQueryBuilder()
+      .update(Service)
+      .set({
+        description: serviceData.description,
+        name: serviceData.name,
+        itemNumber: serviceData.itemNumber,
+        item: serviceData.itemId as unknown as Item,
+      })
+      .where('id = :id', { id: serviceData.id })
+      .execute();
   }
 
   remove(id: number) {

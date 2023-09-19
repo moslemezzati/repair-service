@@ -71,16 +71,13 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async insert(userData: CreateUserDto): Promise<any> {
-    const query = await this.usersRepository
+  insert(userData: CreateUserDto): Promise<any> {
+    return this.usersRepository
       .createQueryBuilder()
       .insert()
       .into(User)
       .values(userData)
       .execute();
-
-    console.log('insert', query);
-    return query;
   }
 
   async update(userData: UpdateUserDto): Promise<any> {
