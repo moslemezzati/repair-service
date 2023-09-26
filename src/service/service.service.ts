@@ -4,7 +4,6 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
 import { ILike, Repository } from 'typeorm';
-import { Item } from '../item/entities/item.entity';
 
 @Injectable()
 export class ServiceService {
@@ -41,7 +40,7 @@ export class ServiceService {
     const skip = (page - 1) * take || 0;
     const where = [];
     if (search) {
-      where.push({ address: ILike(`%${search}%`) });
+      where.push({ description: ILike(`%${search}%`) });
       where.push({ name: ILike(`%${search}%`) });
     }
     const [services, total] = await this.serviceRepository.findAndCount({

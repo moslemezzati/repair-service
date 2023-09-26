@@ -3,9 +3,8 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Company } from './entities/company.entity';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { CreateUserDto } from '../users/user.dto';
 import { User } from '../users/user.entity';
 
 @Injectable()
@@ -23,10 +22,12 @@ export class CompanyService {
   async findAll({
     take = 100,
     page = 1,
+    userId,
     search,
   }: {
     take: number;
     page: number;
+    userId: number;
     search?: string;
   }): Promise<{
     companies: Company[];
@@ -38,16 +39,20 @@ export class CompanyService {
     page = +page;
     take = +take;
     const skip = (page - 1) * take || 0;
-    const where = [];
+    let where = `userId = :userId`;
+    const queryParams: any = { userId };
+
     if (search) {
-      where.push({ address: ILike(`%${search}%`) });
-      where.push({ name: ILike(`%${search}%`) });
+      where += ` AND (address ILIKE :search OR name ILIKE :search)`;
+      queryParams.search = `%${search}%`;
     }
-    const [companies, total] = await this.companyRepository.findAndCount({
-      take,
-      skip,
-      where,
-    });
+
+    const [companies, total] = await this.companyRepository
+      .createQueryBuilder('company')
+      .where(where, queryParams)
+      .take(take)
+      .skip(skip)
+      .getManyAndCount();
     const pages = Math.ceil(total / take);
     return { companies, total, pages, page, take };
   }

@@ -47,9 +47,16 @@ export class CompanyController {
     required: false,
     type: Number,
   })
-  findAll(@Query() query: { take: number; page: number; search: string }) {
-    const { take, page, search } = query;
-    return this.companyService.findAll({ take, page, search });
+  findAll(
+    @Query()
+    query: {
+      take: number;
+      page: number;
+      search: string;
+      userId: number;
+    },
+  ) {
+    return this.companyService.findAll(query);
   }
 
   @Get(':id')
