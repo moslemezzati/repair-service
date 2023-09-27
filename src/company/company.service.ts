@@ -39,11 +39,16 @@ export class CompanyService {
     page = +page;
     take = +take;
     const skip = (page - 1) * take || 0;
-    let where = `userId = :userId`;
-    const queryParams: any = { userId };
+    let where = '';
+    const queryParams: any = {};
+
+    if (userId) {
+      where = `userId = :userId AND `;
+      queryParams.userId = userId;
+    }
 
     if (search) {
-      where += ` AND (address ILIKE :search OR name ILIKE :search)`;
+      where += `(address ILIKE :search OR name ILIKE :search)`;
       queryParams.search = `%${search}%`;
     }
 

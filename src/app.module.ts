@@ -9,6 +9,7 @@ import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
 import { ServiceModule } from './service/service.module';
 
+//password: @ah367Zaf*IVB8
 @Module({
   imports: [
     TypeOrmModule.forRoot({

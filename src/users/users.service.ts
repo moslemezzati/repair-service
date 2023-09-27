@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Roles, User } from './user.entity';
+import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { Company } from '../company/entities/company.entity';
 
@@ -16,7 +16,7 @@ export class UsersService {
     take = 100,
     page = 1,
     search,
-    role = Roles.TECHNICIAN,
+    role,
   }: {
     take: number;
     page: number;
@@ -31,24 +31,21 @@ export class UsersService {
   }> {
     take = +take;
     const skip = (page - 1) * take || 0;
-
-    // const [users, total]
-    const query = this.usersRepository.createQueryBuilder();
-    let queryText = 'role = :role';
+    const query = this.usersRepository.createQueryBuilder('user');
+    query.leftJoinAndSelect('user.company', 'company');
+    query.leftJoinAndSelect('company.user', 'companyUser');
+    query.where('user.role IN (:...roles)', {
+      roles: ['technician', 'worker'],
+    });
+    query.andWhere('companyUser.role = :role', { role: 'admin' });
     if (search) {
-      queryText +=
-        ' AND firstName LIKE :filter OR lastName LIKE :filter OR mobile LIKE :filter';
+      query.andWhere(
+        '(user.firstName LIKE :filter OR user.lastName LIKE :filter OR user.mobile LIKE :filter)',
+        { filter: `%${search}%` },
+      );
     }
-    query
-      .select()
-      .where(queryText, {
-        role,
-        filter: `%${search}%`,
-      })
-      .skip(skip)
-      .take(take);
-    const users = await query.getMany();
-    const total = await query.getCount();
+    query.skip(skip).take(take);
+    const [users, total] = await query.getManyAndCount();
     const pages = Math.ceil(total / take);
     return { users, total, pages, page, take };
   }

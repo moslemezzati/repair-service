@@ -4,6 +4,7 @@ import { Company } from '../company/entities/company.entity';
 export enum Roles {
   ADMIN = 'admin',
   TECHNICIAN = 'technician',
+  WORKER = 'worker',
 }
 
 @Entity()

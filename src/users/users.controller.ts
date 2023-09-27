@@ -16,6 +16,8 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -37,6 +39,11 @@ export class UsersController {
   }
 
   @Get('/')
+  @ApiOperation({ summary: 'Find all users' })
+  @ApiQuery({ name: 'take', type: Number, required: false })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'search', type: String, required: false })
+  @ApiQuery({ name: 'role', type: String, required: false })
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async findAll(
