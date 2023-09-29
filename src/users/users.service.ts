@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './user.dto';
 import { Company } from '../company/entities/company.entity';
 
 @Injectable()
@@ -16,14 +16,14 @@ export class UsersService {
     take = 100,
     page = 1,
     search,
-    role,
+    adminId,
   }: {
     take: number;
     page: number;
     search?: string;
-    role?: string;
+    adminId: number;
   }): Promise<{
-    users: User[];
+    users: ResponseUserDto[];
     total: number;
     pages: number;
     page: number;
@@ -32,12 +32,10 @@ export class UsersService {
     take = +take;
     const skip = (page - 1) * take || 0;
     const query = this.usersRepository.createQueryBuilder('user');
-    query.leftJoinAndSelect('user.company', 'company');
-    query.leftJoinAndSelect('company.user', 'companyUser');
     query.where('user.role IN (:...roles)', {
       roles: ['technician', 'worker'],
     });
-    query.andWhere('companyUser.role = :role', { role: 'admin' });
+    query.andWhere('user.adminId = :adminId', { adminId });
     if (search) {
       query.andWhere(
         '(user.firstName LIKE :filter OR user.lastName LIKE :filter OR user.mobile LIKE :filter)',
@@ -50,12 +48,11 @@ export class UsersService {
     return { users, total, pages, page, take };
   }
 
-  async findOne(id: number): Promise<User | null> {
-    const user = await this.usersRepository.findOne({
-      where: { id },
-      relations: { company: true },
-    });
-    return user;
+  async findOne(id: number): Promise<ResponseUserDto | null> {
+    return this.usersRepository
+      .createQueryBuilder()
+      .where('id = :id', { id })
+      .getOne();
   }
 
   async findUser(mobile: string, password: string): Promise<User | null> {

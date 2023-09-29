@@ -53,7 +53,7 @@ export class CompanyController {
       take: number;
       page: number;
       search: string;
-      userId: number;
+      adminId: number;
     },
   ) {
     return this.companyService.findAll(query);
@@ -73,6 +73,7 @@ export class CompanyController {
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
+    console.log({ updateCompanyDto });
     return this.companyService.update(+id, updateCompanyDto);
   }
 

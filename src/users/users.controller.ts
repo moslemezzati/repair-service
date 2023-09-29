@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import {
   ApiCreatedResponse,
@@ -52,16 +52,16 @@ export class UsersController {
       take: number;
       page: number;
       search: string;
-      role: string;
+      adminId: number;
     },
   ) {
-    return this.usersService.findAll({ ...query });
+    return this.usersService.findAll(query);
   }
 
   @Get('/:id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getUser(@Param('id') id: string): Promise<User> {
+  async getUser(@Param('id') id: string): Promise<ResponseUserDto> {
     const user = await this.usersService.findOne(+id);
     return { ...user };
   }

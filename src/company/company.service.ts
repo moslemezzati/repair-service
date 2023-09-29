@@ -22,12 +22,12 @@ export class CompanyService {
   async findAll({
     take = 100,
     page = 1,
-    userId,
+    adminId,
     search,
   }: {
     take: number;
     page: number;
-    userId: number;
+    adminId: number;
     search?: string;
   }): Promise<{
     companies: Company[];
@@ -39,25 +39,17 @@ export class CompanyService {
     page = +page;
     take = +take;
     const skip = (page - 1) * take || 0;
-    let where = '';
-    const queryParams: any = {};
-
-    if (userId) {
-      where = `userId = :userId AND `;
-      queryParams.userId = userId;
+    const query = this.companyRepository.createQueryBuilder('company');
+    if (adminId) {
+      query.where(`adminId = :adminId`, { adminId });
     }
-
     if (search) {
-      where += `(address ILIKE :search OR name ILIKE :search)`;
-      queryParams.search = `%${search}%`;
+      query.where(`address LIKE :search OR name LIKE :search`, {
+        search: `%${search}%`,
+      });
     }
-
-    const [companies, total] = await this.companyRepository
-      .createQueryBuilder('company')
-      .where(where, queryParams)
-      .take(take)
-      .skip(skip)
-      .getManyAndCount();
+    query.take(take).skip(skip);
+    const [companies, total] = await query.getManyAndCount();
     const pages = Math.ceil(total / take);
     return { companies, total, pages, page, take };
   }

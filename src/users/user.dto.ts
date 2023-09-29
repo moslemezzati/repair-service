@@ -47,7 +47,17 @@ export class CreateUserDto {
   @IsNumber()
   @IsOptional()
   companyId: number;
+
+  @ApiPropertyOptional({
+    type: Number,
+    description: 'This is a required property',
+  })
+  @IsNumber()
+  @IsOptional()
+  adminId?: number;
 }
+
+export class ResponseUserDto extends CreateUserDto {}
 
 export class UpdateUserDto extends CreateUserDto {
   id: number;

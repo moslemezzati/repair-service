@@ -19,9 +19,9 @@ export class Company {
   address: string;
 
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'adminId' })
   user: User;
 
   @Column()
-  userId: number;
+  adminId: number;
 }

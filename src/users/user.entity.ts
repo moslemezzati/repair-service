@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Company } from '../company/entities/company.entity';
 
 export enum Roles {
@@ -35,4 +41,11 @@ export class User {
 
   @Column({ default: null })
   companyId: number;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'adminId' })
+  user: User;
+
+  @Column({ default: null })
+  adminId: number;
 }
