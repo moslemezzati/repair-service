@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateItemDto {
+export class CreateMessageDto {
   @ApiProperty({
     type: String,
     description: 'This is a required property',
   })
   @IsString()
-  name: string;
+  title: string;
 
   @ApiProperty({
     type: String,
   })
   @IsString()
-  description: string;
+  body: string;
 
   @IsOptional()
   @IsNumber()

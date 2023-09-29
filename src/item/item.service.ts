@@ -20,10 +20,12 @@ export class ItemService {
     take = 100,
     page = 1,
     search,
+    adminId,
   }: {
     take: number;
     page: number;
     search?: string;
+    adminId: number;
   }): Promise<{
     items: Item[];
     total: number;
@@ -34,15 +36,12 @@ export class ItemService {
     take = +take;
     const skip = (page - 1) * take || 0;
     const query = this.itemRepository.createQueryBuilder();
-    let queryText = '';
-    if (search) {
-      queryText = 'name LIKE :filter OR description LIKE :filter';
-    }
     query
       .select()
-      .where(queryText, {
+      .where('name LIKE :filter OR description LIKE :filter', {
         filter: `%${search}%`,
       })
+      .where('adminId = :adminId', { adminId })
       .take(take)
       .skip(skip);
     const items = await query.getMany();

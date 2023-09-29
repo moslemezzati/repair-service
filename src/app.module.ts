@@ -1,4 +1,4 @@
-import { Module, ClassSerializerInterceptor } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +8,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
 import { ServiceModule } from './service/service.module';
+import { MessageModule } from './message/message.module';
 
 //password: @ah367Zaf*IVB8
 @Module({
@@ -28,6 +29,7 @@ import { ServiceModule } from './service/service.module';
     CompanyModule,
     ItemModule,
     ServiceModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -8,15 +9,15 @@ import {
 import { User } from '../../users/user.entity';
 
 @Entity()
-export class Item {
+export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
-  name: string;
+  title: string;
 
-  @Column({ nullable: true })
-  description: string;
+  @Column({ nullable: true, type: 'text' })
+  body: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'adminId' })
@@ -24,4 +25,9 @@ export class Item {
 
   @Column()
   adminId: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  public createdAt: Date;
 }

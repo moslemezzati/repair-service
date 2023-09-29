@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -14,20 +13,19 @@ import {
   ApiOkResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { ItemService } from './item.service';
-import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
+import { MessageService } from './message.service';
+import { CreateMessageDto } from './dto/create-message.dto';
 
-@Controller('item')
-export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
+@Controller('message')
+export class MessageController {
+  constructor(private readonly messageService: MessageService) {}
 
   @Post()
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemService.create(createItemDto);
+  create(@Body() createItemDto: CreateMessageDto) {
+    return this.messageService.create(createItemDto);
   }
 
   @Get()
@@ -43,25 +41,19 @@ export class ItemController {
       adminId: number;
     },
   ) {
-    return this.itemService.findAll(query);
+    return this.messageService.findAll(query);
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   findOne(@Param('id') id: string) {
-    return this.itemService.findOne(+id);
-  }
-
-  @Patch(':id')
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemService.update(+id, updateItemDto);
+    return this.messageService.findOne(+id);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   remove(@Param('id') id: string) {
-    return this.itemService.remove(+id);
+    return this.messageService.remove(+id);
   }
 }

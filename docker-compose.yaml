@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: repair
-    ports: 
+    ports:
       - 3306:3306
 volumes:
   todo-mysql-data:
