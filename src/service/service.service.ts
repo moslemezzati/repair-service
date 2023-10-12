@@ -3,7 +3,7 @@ import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ServiceService {
@@ -25,10 +25,12 @@ export class ServiceService {
     take = 100,
     page = 1,
     search,
+    userId,
   }: {
     take: number;
     page: number;
     search?: string;
+    userId: number;
   }): Promise<{
     services: Service[];
     total: number;
@@ -38,16 +40,16 @@ export class ServiceService {
   }> {
     take = +take;
     const skip = (page - 1) * take || 0;
-    const where = [];
+    const query = this.serviceRepository.createQueryBuilder();
+    query.select().where('userId = :userId', { userId });
     if (search) {
-      where.push({ description: ILike(`%${search}%`) });
-      where.push({ name: ILike(`%${search}%`) });
+      query.andWhere('(name LIKE :filter OR description LIKE :filter)', {
+        filter: `%${search}%`,
+      });
     }
-    const [services, total] = await this.serviceRepository.findAndCount({
-      take,
-      skip,
-      where,
-    });
+    query.take(take).skip(skip);
+    const services = await query.getMany();
+    const total = await query.getCount();
     const pages = Math.ceil(total / take);
     return { services, total, pages, page, take };
   }

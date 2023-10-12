@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
-import { UpdateServiceDto } from './dto/update-service.dto';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -44,7 +43,15 @@ export class ServiceController {
     required: false,
     type: Number,
   })
-  findAll(@Query() query: { take: number; page: number; search: string }) {
+  findAll(
+    @Query()
+    query: {
+      take: number;
+      page: number;
+      search: string;
+      userId: number;
+    },
+  ) {
     return this.serviceService.findAll(query);
   }
 

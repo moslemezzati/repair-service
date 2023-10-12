@@ -36,14 +36,13 @@ export class ItemService {
     take = +take;
     const skip = (page - 1) * take || 0;
     const query = this.itemRepository.createQueryBuilder();
-    query
-      .select()
-      .where('name LIKE :filter OR description LIKE :filter', {
+    query.select().where('adminId = :adminId', { adminId });
+    if (search) {
+      query.andWhere('(name LIKE :filter OR description LIKE :filter)', {
         filter: `%${search}%`,
-      })
-      .where('adminId = :adminId', { adminId })
-      .take(take)
-      .skip(skip);
+      });
+    }
+    query.take(take).skip(skip);
     const items = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);

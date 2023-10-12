@@ -40,11 +40,9 @@ export class CompanyService {
     take = +take;
     const skip = (page - 1) * take || 0;
     const query = this.companyRepository.createQueryBuilder('company');
-    if (adminId) {
-      query.where(`adminId = :adminId`, { adminId });
-    }
+    query.where(`adminId = :adminId`, { adminId });
     if (search) {
-      query.where(`address LIKE :search OR name LIKE :search`, {
+      query.andWhere(`(address LIKE :search OR name LIKE :search)`, {
         search: `%${search}%`,
       });
     }
