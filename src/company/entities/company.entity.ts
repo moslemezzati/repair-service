@@ -9,7 +9,7 @@ import {
 import { User } from '../../users/user.entity';
 
 @Entity()
-@Unique("adminId"',"name"'])
+@Unique(['adminId', 'name'])
 export class Company {
   @PrimaryGeneratedColumn()
   id: number;

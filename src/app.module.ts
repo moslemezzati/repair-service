@@ -54,7 +54,7 @@ import * as path from 'path';
     },
     {
       provide: APP_FILTER,
-      useClass: SQLExceptionFiler,
+      useClass: SQLExceptionFilter,
     },
   ],
 })
