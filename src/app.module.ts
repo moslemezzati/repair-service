@@ -4,15 +4,29 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
 import { ServiceModule } from './service/service.module';
 import { MessageModule } from './message/message.module';
+import { SQLExceptionFilter } from './exception.filters';
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import * as path from 'path';
 
 //password: @ah367Zaf*IVB8
 @Module({
   imports: [
+    I18nModule.forRoot({
+      fallbackLanguage: 'fa',
+      loaderOptions: {
+        path: path.join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+      ],
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -37,6 +51,10 @@ import { MessageModule } from './message/message.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: SQLExceptionFiler,
     },
   ],
 })

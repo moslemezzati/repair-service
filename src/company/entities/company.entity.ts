@@ -4,15 +4,17 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../../users/user.entity';
 
 @Entity()
+@Unique("adminId"',"name"'])
 export class Company {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column()
