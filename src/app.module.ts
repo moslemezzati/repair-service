@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
 import { ServiceModule } from './service/service.module';
@@ -12,6 +12,7 @@ import { MessageModule } from './message/message.module';
 import { SQLExceptionFilter } from './exception.filters';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import { EnglishNumberPip } from './englishNumber.pip';
 
 //password: @ah367Zaf*IVB8
 @Module({
@@ -55,6 +56,10 @@ import * as path from 'path';
     {
       provide: APP_FILTER,
       useClass: SQLExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: EnglishNumberPip,
     },
   ],
 })
