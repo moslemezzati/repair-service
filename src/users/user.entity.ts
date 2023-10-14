@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Company } from '../company/entities/company.entity';
 
@@ -48,4 +50,16 @@ export class User {
 
   @Column({ default: null })
   adminId: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    nullable: true,
+  })
+  createdAt?: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    nullable: true,
+  })
+  updatedAt?: Date;
 }

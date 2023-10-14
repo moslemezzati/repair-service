@@ -42,7 +42,7 @@ export class UsersService {
         { filter: `%${search}%` },
       );
     }
-    query.skip(skip).take(take);
+    query.skip(skip).take(take).orderBy('createdAt', 'DESC');
     const [users, total] = await query.getManyAndCount();
     const pages = Math.ceil(total / take);
     return { users, total, pages, page, take };

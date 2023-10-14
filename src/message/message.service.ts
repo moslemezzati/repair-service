@@ -40,7 +40,11 @@ export class MessageService {
         filter: `%${search}%`,
       });
     }
-    query.andWhere('adminId = :adminId', { adminId }).take(take).skip(skip);
+    query
+      .andWhere('adminId = :adminId', { adminId })
+      .take(take)
+      .skip(skip)
+      .orderBy('createdAt', 'DESC');
     const messages = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);

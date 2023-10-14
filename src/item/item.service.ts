@@ -42,7 +42,7 @@ export class ItemService {
         filter: `%${search}%`,
       });
     }
-    query.take(take).skip(skip);
+    query.take(take).skip(skip).orderBy('createdAt', 'DESC');
     const items = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);

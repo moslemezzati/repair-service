@@ -47,7 +47,7 @@ export class ServiceService {
         filter: `%${search}%`,
       });
     }
-    query.take(take).skip(skip);
+    query.take(take).skip(skip).orderBy('createdAt', 'DESC');
     const services = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);

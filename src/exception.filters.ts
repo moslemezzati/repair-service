@@ -35,7 +35,7 @@ export class SQLExceptionFilter implements ExceptionFilter {
   }
 }
 
-@Catch()
+@Catch(HttpException)
 export class MessageExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const i18n = I18nContext.current(host);

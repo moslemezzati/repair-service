@@ -29,5 +29,5 @@ export class Message {
   @CreateDateColumn({
     type: 'timestamp',
   })
-  public createdAt: Date;
+  createdAt: Date;
 }

@@ -41,10 +41,10 @@ export class Service {
   @CreateDateColumn({
     type: 'timestamp',
   })
-  public createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
   })
-  public updatedAt: Date;
+  updatedAt: Date;
 }
