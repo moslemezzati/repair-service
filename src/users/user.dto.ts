@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsMobilePhone, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Roles } from './user.entity';
@@ -30,6 +30,7 @@ export class CreateUserDto {
     description: 'This is a required property',
   })
   @IsString()
+  @IsMobilePhone('fa-IR')
   mobile: string;
 
   @ApiPropertyOptional({

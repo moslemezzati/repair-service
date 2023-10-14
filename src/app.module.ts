@@ -9,7 +9,10 @@ import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
 import { ServiceModule } from './service/service.module';
 import { MessageModule } from './message/message.module';
-import { SQLExceptionFilter } from './exception.filters';
+import {
+  MessageExceptionFilter,
+  SQLExceptionFilter,
+} from './exception.filters';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
 import { EnglishNumberPip } from './englishNumber.pip';
@@ -56,6 +59,10 @@ import { EnglishNumberPip } from './englishNumber.pip';
     {
       provide: APP_FILTER,
       useClass: SQLExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: MessageExceptionFilter,
     },
     {
       provide: APP_PIPE,
