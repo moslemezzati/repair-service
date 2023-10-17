@@ -5,22 +5,21 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/user.entity';
+import { Company } from '../../company/entities/company.entity';
 
 @Entity()
-@Unique(['adminId', 'name'])
-export class Company {
+export class Device {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column()
-  address: string;
+  @Column({ nullable: true })
+  description: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'adminId' })
@@ -28,6 +27,13 @@ export class Company {
 
   @Column()
   adminId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn({ name: 'companyId' })
+  company: Company;
+
+  @Column()
+  companyId: number;
 
   @CreateDateColumn({
     type: 'timestamp',

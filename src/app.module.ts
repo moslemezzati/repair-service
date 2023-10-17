@@ -16,6 +16,7 @@ import {
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
 import { EnglishNumberPip } from './englishNumber.pip';
+import { DeviceModule } from './device/device.module';
 
 //password: @ah367Zaf*IVB8
 @Module({
@@ -48,6 +49,7 @@ import { EnglishNumberPip } from './englishNumber.pip';
     ItemModule,
     ServiceModule,
     MessageModule,
+    DeviceModule,
   ],
   controllers: [AppController],
   providers: [

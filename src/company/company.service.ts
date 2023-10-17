@@ -46,7 +46,7 @@ export class CompanyService {
         search: `%${search}%`,
       });
     }
-    query.take(take).skip(skip);
+    query.take(take).skip(skip).orderBy('createdAt', 'DESC');
     const [companies, total] = await query.getManyAndCount();
     const pages = Math.ceil(total / take);
     return { companies, total, pages, page, take };
