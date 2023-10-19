@@ -42,9 +42,12 @@ export class DeviceService {
       .where('device.adminId = :adminId', { adminId })
       .leftJoinAndSelect('device.company', 'company');
     if (search) {
-      query.andWhere('(name LIKE :filter OR description LIKE :filter)', {
-        filter: `%${search}%`,
-      });
+      query.andWhere(
+        '(device.name LIKE :filter OR device.description LIKE :filter OR company.name LIKE :filter)',
+        {
+          filter: `%${search}%`,
+        },
+      );
     }
     query.take(take).skip(skip).orderBy('device.createdAt', 'DESC');
     const devices = await query.getMany();

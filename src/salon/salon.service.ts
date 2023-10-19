@@ -42,9 +42,12 @@ export class SalonService {
       .where('salon.adminId = :adminId', { adminId })
       .leftJoinAndSelect('salon.company', 'company');
     if (search) {
-      query.andWhere('(name LIKE :filter OR description LIKE :filter)', {
-        filter: `%${search}%`,
-      });
+      query.andWhere(
+        '(salon.name LIKE :filter OR salon.description LIKE :filter OR company.name LIKE :filter)',
+        {
+          filter: `%${search}%`,
+        },
+      );
     }
     query.take(take).skip(skip).orderBy('salon.createdAt', 'DESC');
     const salons = await query.getMany();
