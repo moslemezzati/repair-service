@@ -15,21 +15,21 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { DeviceService } from './device.service';
-import { CreateDeviceDto } from './dto/create-device.dto';
-import { UpdateDeviceDto } from './dto/update-device.dto';
+import { SalonService } from './salon.service';
+import { CreateSalonDto } from './dto/create-salon.dto';
+import { UpdateSalonDto } from './dto/update-salon.dto';
 
-@ApiTags('Device')
-@Controller('Device')
-export class DeviceController {
-  constructor(private readonly deviceService: DeviceService) {}
+@ApiTags('salon')
+@Controller('salon')
+export class SalonController {
+  constructor(private readonly salonService: SalonService) {}
 
   @Post()
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createDeviceDto: CreateDeviceDto) {
-    return this.deviceService.create(createDeviceDto);
+  create(@Body() createSalonDto: CreateSalonDto) {
+    return this.salonService.create(createSalonDto);
   }
 
   @Get()
@@ -46,25 +46,25 @@ export class DeviceController {
       companyId?: number;
     },
   ) {
-    return this.deviceService.findAll(query);
+    return this.salonService.findAll(query);
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   findOne(@Param('id') id: string) {
-    return this.deviceService.findOne(+id);
+    return this.salonService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    return this.deviceService.update(+id, updateDeviceDto);
+  update(@Param('id') id: string, @Body() updateItemDto: UpdateSalonDto) {
+    return this.salonService.update(+id, updateItemDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   remove(@Param('id') id: string) {
-    return this.deviceService.remove(+id);
+    return this.salonService.remove(+id);
   }
 }

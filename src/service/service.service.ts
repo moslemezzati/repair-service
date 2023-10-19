@@ -40,14 +40,36 @@ export class ServiceService {
   }> {
     take = +take;
     const skip = (page - 1) * take || 0;
-    const query = this.serviceRepository.createQueryBuilder();
-    query.select().where('userId = :userId', { userId });
+    const query = this.serviceRepository
+      .createQueryBuilder('service')
+      .leftJoinAndSelect('service.item', 'item')
+      .leftJoinAndSelect('service.device', 'device')
+      .leftJoinAndSelect('service.salon', 'salon')
+      .leftJoinAndSelect('service.company', 'company')
+      .where('userId = :userId', { userId })
+      .select([
+        'service.id',
+        'service.name',
+        'service.description',
+        'service.createdAt',
+        'item',
+        'device',
+        'salon',
+        'company',
+      ]);
     if (search) {
-      query.andWhere('(name LIKE :filter OR description LIKE :filter)', {
-        filter: `%${search}%`,
-      });
+      query.andWhere(
+        '(service.name LIKE :filter OR ' +
+          'service.description LIKE :filter OR ' +
+          'salon.name LIKE :filter OR ' +
+          'company.name LIKE :filter OR ' +
+          'device.name LIKE :filter)',
+        {
+          filter: `%${search}%`,
+        },
+      );
     }
-    query.take(take).skip(skip).orderBy('createdAt', 'DESC');
+    query.take(take).skip(skip).orderBy('service.createdAt', 'DESC');
     const services = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);
@@ -59,19 +81,10 @@ export class ServiceService {
       .createQueryBuilder('service')
       .leftJoinAndSelect('service.item', 'item')
       .where('service.id = :id', { id: serviceId })
-      .select(['service', 'item.id', 'item.name']) // Select the required columns
+      .select(['service', 'item.id', 'item.name'])
       .getOne();
 
-    const { id, name, description, item, itemNumber } = result;
-    const { id: itemId } = item;
-
-    return {
-      id,
-      name,
-      description,
-      itemId,
-      itemNumber,
-    };
+    return result;
   }
 
   update(serviceData: UpdateServiceDto) {
@@ -79,12 +92,7 @@ export class ServiceService {
     return this.serviceRepository
       .createQueryBuilder()
       .update(Service)
-      .set({
-        description: serviceData.description,
-        name: serviceData.name,
-        itemNumber: serviceData.itemNumber,
-        itemId: serviceData.itemId,
-      })
+      .set(serviceData)
       .where('id = :id', { id: serviceData.id })
       .execute();
   }

@@ -36,4 +36,25 @@ export class CreateServiceDto {
   })
   @IsNumber()
   itemNumber: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNumber()
+  companyId: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNumber()
+  deviceId: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNumber()
+  salonId: number;
 }

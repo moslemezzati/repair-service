@@ -7,14 +7,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Item } from '../../item/entities/item.entity';
 import { User } from '../../users/user.entity';
-import { Device } from '../../device/entities/device.entity';
-import { Salon } from '../../salon/entities/salon';
 import { Company } from '../../company/entities/company.entity';
 
 @Entity()
-export class Service {
+export class Salon {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,29 +21,12 @@ export class Service {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => Item, { nullable: true })
-  @JoinColumn({ name: 'itemId' })
-  item: Item;
-
-  @Column()
-  itemId: number;
-
-  @Column()
-  itemNumber: number;
-
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'adminId' })
   user: User;
 
   @Column()
-  userId: number;
-
-  @ManyToOne(() => Device, { nullable: true })
-  @JoinColumn({ name: 'deviceId' })
-  device: Device;
-
-  @Column()
-  deviceId: number;
+  adminId: number;
 
   @ManyToOne(() => Company, { nullable: true })
   @JoinColumn({ name: 'companyId' })
@@ -54,13 +34,6 @@ export class Service {
 
   @Column()
   companyId: number;
-
-  @ManyToOne(() => Salon, { nullable: true })
-  @JoinColumn({ name: 'salonId' })
-  salon: Salon;
-
-  @Column()
-  salonId: number;
 
   @CreateDateColumn({
     type: 'timestamp',
