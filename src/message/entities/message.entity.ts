@@ -5,10 +5,12 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../../users/user.entity';
 
 @Entity()
+@Unique(['adminId', 'title'])
 export class Message {
   @PrimaryGeneratedColumn()
   id: number;
