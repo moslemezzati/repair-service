@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSalonDto } from './dto/create-salon.dto';
 import { UpdateSalonDto } from './dto/update-salon.dto';
-import { Salon } from './entities/salon';
+import { SalonEntity } from './entities/salon.entity';
 
 @Injectable()
 export class SalonService {
   constructor(
-    @InjectRepository(Salon)
-    private salonRepository: Repository<Salon>,
+    @InjectRepository(SalonEntity)
+    private salonRepository: Repository<SalonEntity>,
   ) {}
 
   create(createSalonDto: CreateSalonDto) {
@@ -28,7 +28,7 @@ export class SalonService {
     adminId: number;
     companyId?: number;
   }): Promise<{
-    salons: Salon[];
+    salons: SalonEntity[];
     total: number;
     pages: number;
     page: number;

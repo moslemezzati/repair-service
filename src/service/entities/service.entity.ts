@@ -10,7 +10,7 @@ import {
 import { Item } from '../../item/entities/item.entity';
 import { User } from '../../users/user.entity';
 import { Device } from '../../device/entities/device.entity';
-import { Salon } from '../../salon/entities/salon';
+import { SalonEntity } from '../../salon/entities/salon.entity';
 import { Company } from '../../company/entities/company.entity';
 
 @Entity()
@@ -55,9 +55,9 @@ export class Service {
   @Column()
   companyId: number;
 
-  @ManyToOne(() => Salon, { nullable: true })
+  @ManyToOne(() => SalonEntity, { nullable: true })
   @JoinColumn({ name: 'salonId' })
-  salon: Salon;
+  salon: SalonEntity;
 
   @Column()
   salonId: number;

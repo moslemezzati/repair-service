@@ -5,17 +5,19 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/user.entity';
 import { Company } from '../../company/entities/company.entity';
 
 @Entity()
-export class Salon {
+@Unique(['companyId', 'name'])
+export class SalonEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column({ nullable: true })
