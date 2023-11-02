@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
 import { ItemModule } from './item/item.module';
@@ -18,10 +17,13 @@ import * as path from 'path';
 import { EnglishNumberPip } from './englishNumber.pip';
 import { DeviceModule } from './device/device.module';
 import { SalonModule } from './salon/salon.module';
+import { ConfigModule } from '@nestjs/config';
+import { IamModule } from './iam/iam.module';
 
 //password: @ah367Zaf*IVB8
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     I18nModule.forRoot({
       fallbackLanguage: 'fa',
       loaderOptions: {
@@ -45,7 +47,7 @@ import { SalonModule } from './salon/salon.module';
       logging: 'all',
     }),
     UsersModule,
-    AuthModule,
+    IamModule,
     CompanyModule,
     ItemModule,
     ServiceModule,

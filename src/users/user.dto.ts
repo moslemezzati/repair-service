@@ -1,7 +1,7 @@
 import { IsMobilePhone, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Roles } from './user.entity';
+import { Role } from './enums/role.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -34,12 +34,12 @@ export class CreateUserDto {
   mobile: string;
 
   @ApiPropertyOptional({
-    enum: Roles,
-    enumName: 'Roles',
+    enum: Role,
+    enumName: 'Role',
     description: 'This is a not required property',
   })
   @IsString()
-  role: string;
+  role: Role;
 
   @ApiPropertyOptional({
     type: Number,

@@ -9,5 +9,17 @@ services:
       MYSQL_DATABASE: repair
     ports:
       - 3306:3306
+
+#  db:
+#    image: postgres
+#    restart: always
+#    environment:
+#      - POSTGRES_PASSWORD=postgres
+#    container_name: repair-postgres-db
+#    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
+#    ports:
+#      - '5432:5432'
+
 volumes:
   todo-mysql-data:

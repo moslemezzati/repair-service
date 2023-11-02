@@ -8,12 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Company } from '../company/entities/company.entity';
-
-export enum Roles {
-  ADMIN = 'admin',
-  TECHNICIAN = 'technician',
-  WORKER = 'worker',
-}
+import { Role } from './enums/role.enum';
 
 @Entity()
 export class User {
@@ -29,8 +24,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'enum', enum: Roles, default: Roles.TECHNICIAN })
-  role: string;
+  @Column({ type: 'enum', enum: Role, default: Role.TECHNICIAN })
+  role: Role;
 
   @Column({ unique: true })
   mobile: string;

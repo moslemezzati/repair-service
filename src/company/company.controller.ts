@@ -20,9 +20,12 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
-@ApiTags('company')
-@Controller('company')
+@Auth(AuthType.Bearer)
+@ApiTags('companies')
+@Controller('companies')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 

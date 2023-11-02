@@ -17,7 +17,10 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
+@Auth(AuthType.Bearer)
 @Controller('service')
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}

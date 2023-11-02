@@ -22,7 +22,14 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { User } from './user.entity';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from './enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
+@Auth(AuthType.Bearer)
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -34,7 +41,6 @@ export class UsersController {
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   async registerUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.usersService.insert(createUserDto);
   }
 
@@ -46,16 +52,18 @@ export class UsersController {
   @ApiQuery({ name: 'role', type: String, required: false })
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   async findAll(
     @Query()
     query: {
       take: number;
       page: number;
       search: string;
-      adminId: number;
     },
+    @ActiveUser() user: ActiveUserData,
   ) {
-    return this.usersService.findAll(query);
+    const { sub } = user;
+    return this.usersService.findAll({ ...query, adminId: sub });
   }
 
   @Get('/:id')

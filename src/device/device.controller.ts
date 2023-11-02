@@ -18,9 +18,12 @@ import {
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
-@ApiTags('Device')
-@Controller('Device')
+@Auth(AuthType.Bearer)
+@ApiTags('devices')
+@Controller('devices')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 

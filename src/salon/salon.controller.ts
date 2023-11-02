@@ -18,9 +18,12 @@ import {
 import { SalonService } from './salon.service';
 import { CreateSalonDto } from './dto/create-salon.dto';
 import { UpdateSalonDto } from './dto/update-salon.dto';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
-@ApiTags('salon')
-@Controller('salon')
+@Auth(AuthType.Bearer)
+@ApiTags('salons')
+@Controller('salons')
 export class SalonController {
   constructor(private readonly salonService: SalonService) {}
 

@@ -15,8 +15,11 @@ import {
 } from '@nestjs/swagger';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
-@Controller('message')
+@Auth(AuthType.Bearer)
+@Controller('messages')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 

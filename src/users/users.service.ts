@@ -32,9 +32,20 @@ export class UsersService {
     take = +take;
     const skip = (page - 1) * take || 0;
     const query = this.usersRepository.createQueryBuilder('user');
-    query.where('user.role IN (:...roles)', {
-      roles: ['technician', 'worker'],
-    });
+    query
+      .leftJoinAndSelect('user.company', 'company')
+      .where('user.role IN (:...roles)', {
+        roles: ['technician', 'worker'],
+      })
+      .select([
+        'user.id',
+        'user.firstName',
+        'user.lastName',
+        'user.role',
+        'user.createdAt',
+        'user.mobile',
+        'company',
+      ]);
     query.andWhere('user.adminId = :adminId', { adminId });
     if (search) {
       query.andWhere(
@@ -42,7 +53,7 @@ export class UsersService {
         { filter: `%${search}%` },
       );
     }
-    query.skip(skip).take(take).orderBy('createdAt', 'DESC');
+    query.skip(skip).take(take).orderBy('user.createdAt', 'DESC');
     const [users, total] = await query.getManyAndCount();
     const pages = Math.ceil(total / take);
     return { users, total, pages, page, take };

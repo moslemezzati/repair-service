@@ -17,8 +17,11 @@ import {
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Auth } from '../iam/authentication/decorators/auth.decorator';
+import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 
-@Controller('item')
+@Auth(AuthType.Bearer)
+@Controller('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
