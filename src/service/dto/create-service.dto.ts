@@ -20,6 +20,13 @@ export class CreateServiceDto {
     type: String,
     description: 'This is a required property',
   })
+  @IsString()
+  serviceDate: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
   @IsNumber()
   itemId: number;
 
