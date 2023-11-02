@@ -13,7 +13,7 @@ import { Company } from '../../company/entities/company.entity';
 
 @Entity()
 @Unique(['companyId', 'name'])
-export class SalonEntity {
+export class Salon {
   @PrimaryGeneratedColumn()
   id: number;
 

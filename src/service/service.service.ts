@@ -51,6 +51,7 @@ export class ServiceService {
         'service.id',
         'service.name',
         'service.description',
+        'service.serviceDate',
         'service.createdAt',
         'item',
         'device',
@@ -73,6 +74,7 @@ export class ServiceService {
     const services = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);
+    console.log({ services });
     return { services, total, pages, page, take };
   }
 

@@ -10,7 +10,7 @@ import {
 import { Item } from '../../item/entities/item.entity';
 import { User } from '../../users/user.entity';
 import { Device } from '../../device/entities/device.entity';
-import { SalonEntity } from '../../salon/entities/salon.entity';
+import { Salon } from '../../salon/entities/salon';
 import { Company } from '../../company/entities/company.entity';
 
 @Entity()
@@ -18,10 +18,10 @@ export class Service {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   description: string;
 
   @ManyToOne(() => Item, { nullable: true })
@@ -55,12 +55,15 @@ export class Service {
   @Column()
   companyId: number;
 
-  @ManyToOne(() => SalonEntity, { nullable: true })
+  @ManyToOne(() => Salon, { nullable: true })
   @JoinColumn({ name: 'salonId' })
-  salon: SalonEntity;
+  salon: Salon;
 
   @Column()
   salonId: number;
+
+  @Column()
+  serviceDate: string;
 
   @CreateDateColumn({
     type: 'timestamp',
