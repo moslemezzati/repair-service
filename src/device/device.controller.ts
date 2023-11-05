@@ -20,6 +20,10 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from '../users/enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Auth(AuthType.Bearer)
 @ApiTags('devices')
@@ -31,8 +35,12 @@ export class DeviceController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createDeviceDto: CreateDeviceDto) {
-    return this.deviceService.create(createDeviceDto);
+  @Roles(Role.ADMIN)
+  create(
+    @Body() createDeviceDto: CreateDeviceDto,
+    @ActiveUser() { adminId }: ActiveUserData,
+  ) {
+    return this.deviceService.create({ ...createDeviceDto, adminId });
   }
 
   @Get()
@@ -45,11 +53,11 @@ export class DeviceController {
       page: number;
       search: string;
       role: string;
-      adminId: number;
       companyId?: number;
     },
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    return this.deviceService.findAll(query);
+    return this.deviceService.findAll({ ...query, adminId });
   }
 
   @Get(':id')
@@ -61,12 +69,14 @@ export class DeviceController {
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
     return this.deviceService.update(+id, updateDeviceDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.deviceService.remove(+id);
   }

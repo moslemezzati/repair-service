@@ -17,6 +17,10 @@ import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from '../users/enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Auth(AuthType.Bearer)
 @Controller('messages')
@@ -27,8 +31,12 @@ export class MessageController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createItemDto: CreateMessageDto) {
-    return this.messageService.create(createItemDto);
+  @Roles(Role.ADMIN)
+  create(
+    @Body() createItemDto: CreateMessageDto,
+    @ActiveUser() { adminId }: ActiveUserData,
+  ) {
+    return this.messageService.create({ ...createItemDto, adminId });
   }
 
   @Get()
@@ -41,10 +49,10 @@ export class MessageController {
       page: number;
       search: string;
       role: string;
-      adminId: number;
     },
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    return this.messageService.findAll(query);
+    return this.messageService.findAll({ ...query, adminId });
   }
 
   @Get(':id')
@@ -56,6 +64,7 @@ export class MessageController {
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.messageService.remove(+id);
   }

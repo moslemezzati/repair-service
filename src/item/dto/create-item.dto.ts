@@ -15,6 +15,12 @@ export class CreateItemDto {
   @IsString()
   description: string;
 
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  amount: number;
+
   @IsOptional()
   @IsNumber()
   adminId?: number;

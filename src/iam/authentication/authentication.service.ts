@@ -73,13 +73,20 @@ export class AuthenticationService {
         {
           mobile: user.mobile,
           role: user.role,
+          adminId: user.adminId,
         },
       ),
       this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl, {
         refreshTokenId,
       }),
     ]);
-    return { accessToken, refreshToken };
+    return {
+      accessToken,
+      refreshToken,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
   }
 
   async refreshTokens(refreshTokenDto: RefreshTokenDto) {

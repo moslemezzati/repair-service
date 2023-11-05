@@ -19,6 +19,10 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from '../users/enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Auth(AuthType.Bearer)
 @Controller('items')
@@ -29,7 +33,12 @@ export class ItemController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createItemDto: CreateItemDto) {
+  @Roles(Role.ADMIN)
+  create(
+    @Body() createItemDto: CreateItemDto,
+    @ActiveUser() { sub }: ActiveUserData,
+  ) {
+    createItemDto.adminId = sub;
     return this.itemService.create(createItemDto);
   }
 
@@ -43,10 +52,10 @@ export class ItemController {
       page: number;
       search: string;
       role: string;
-      adminId: number;
     },
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    return this.itemService.findAll(query);
+    return this.itemService.findAll({ ...query, adminId });
   }
 
   @Get(':id')
@@ -64,6 +73,7 @@ export class ItemController {
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.itemService.remove(+id);
   }

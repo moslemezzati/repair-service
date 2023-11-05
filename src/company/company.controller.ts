@@ -22,6 +22,10 @@ import {
 import { ApiImplicitQuery } from '@nestjs/swagger/dist/decorators/api-implicit-query.decorator';
 import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from '../users/enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Auth(AuthType.Bearer)
 @ApiTags('companies')
@@ -33,8 +37,12 @@ export class CompanyController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  @Roles(Role.ADMIN)
+  create(
+    @Body() createCompanyDto: CreateCompanyDto,
+    @ActiveUser() { adminId }: ActiveUserData,
+  ) {
+    return this.companyService.create({ ...createCompanyDto, adminId });
   }
 
   @Get()
@@ -56,10 +64,10 @@ export class CompanyController {
       take: number;
       page: number;
       search: string;
-      adminId: number;
     },
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    return this.companyService.findAll(query);
+    return this.companyService.findAll({ ...query, adminId });
   }
 
   @Get(':id')
@@ -75,12 +83,13 @@ export class CompanyController {
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    console.log({ updateCompanyDto });
     return this.companyService.update(+id, updateCompanyDto);
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   remove(@Param('id') id: string) {
     return this.companyService.remove(+id);

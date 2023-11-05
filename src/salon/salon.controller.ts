@@ -20,6 +20,10 @@ import { CreateSalonDto } from './dto/create-salon.dto';
 import { UpdateSalonDto } from './dto/update-salon.dto';
 import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
+import { Roles } from '../iam/authorization/decorators/role.decorator';
+import { Role } from '../users/enums/role.enum';
+import { ActiveUser } from '../iam/decorators/active-user.decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Auth(AuthType.Bearer)
 @ApiTags('salons')
@@ -31,7 +35,12 @@ export class SalonController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  create(@Body() createSalonDto: CreateSalonDto) {
+  @Roles(Role.ADMIN)
+  create(
+    @Body() createSalonDto: CreateSalonDto,
+    @ActiveUser() { sub }: ActiveUserData,
+  ) {
+    createSalonDto.adminId = sub;
     return this.salonService.create(createSalonDto);
   }
 
@@ -45,11 +54,11 @@ export class SalonController {
       page: number;
       search: string;
       role: string;
-      adminId: number;
       companyId?: number;
     },
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    return this.salonService.findAll(query);
+    return this.salonService.findAll({ ...query, adminId });
   }
 
   @Get(':id')
@@ -67,6 +76,7 @@ export class SalonController {
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.salonService.remove(+id);
   }

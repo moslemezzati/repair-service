@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './user.dto';
 import { Company } from '../company/entities/company.entity';
+import { HashingService } from '../iam/hashing/hashing.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private readonly hashingService: HashingService,
   ) {}
 
   async findAll({
@@ -68,7 +70,6 @@ export class UsersService {
 
   async findUser(mobile: string, password: string): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ mobile, password });
-    console.log({ user, mobile, password });
     return user;
   }
 
@@ -76,7 +77,8 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  insert(userData: CreateUserDto): Promise<any> {
+  async insert(userData: CreateUserDto): Promise<any> {
+    userData.password = await this.hashingService.hash(userData.password);
     return this.usersRepository
       .createQueryBuilder()
       .insert()
@@ -86,13 +88,15 @@ export class UsersService {
   }
 
   async update(userData: UpdateUserDto): Promise<any> {
+    if (userData.password) {
+      userData.password = await this.hashingService.hash(userData.password);
+    }
     const query = await this.usersRepository
       .createQueryBuilder()
       .update(User)
       .set(userData)
       .where('id = :id', { id: userData.id })
       .execute();
-    console.log('update', query);
     return query;
   }
 
@@ -100,7 +104,6 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({
       company: id as unknown as Company,
     });
-    console.log(user);
     return user;
   }
 }

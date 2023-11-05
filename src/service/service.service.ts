@@ -4,6 +4,7 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
 import { Repository } from 'typeorm';
+import { Role } from '../users/enums/role.enum';
 
 @Injectable()
 export class ServiceService {
@@ -26,11 +27,15 @@ export class ServiceService {
     page = 1,
     search,
     userId,
+    role,
+    adminId,
   }: {
     take: number;
     page: number;
     search?: string;
-    userId: number;
+    userId?: number;
+    role?: Role;
+    adminId?: number;
   }): Promise<{
     services: Service[];
     total: number;
@@ -40,13 +45,14 @@ export class ServiceService {
   }> {
     take = +take;
     const skip = (page - 1) * take || 0;
+
     const query = this.serviceRepository
       .createQueryBuilder('service')
       .leftJoinAndSelect('service.item', 'item')
       .leftJoinAndSelect('service.device', 'device')
       .leftJoinAndSelect('service.salon', 'salon')
       .leftJoinAndSelect('service.company', 'company')
-      .where('userId = :userId', { userId })
+      .leftJoinAndSelect('service.user', 'user', 'user.id = service.userId')
       .select([
         'service.id',
         'service.name',
@@ -57,13 +63,22 @@ export class ServiceService {
         'device',
         'salon',
         'company',
+        'user.firstName',
+        'user.lastName',
       ]);
+    if (role === Role.ADMIN) {
+      query.where('user.adminId = :adminId', { adminId });
+    } else {
+      query.where('userId = :userId', { userId });
+    }
     if (search) {
       query.andWhere(
         '(service.name LIKE :filter OR ' +
           'service.description LIKE :filter OR ' +
           'salon.name LIKE :filter OR ' +
           'company.name LIKE :filter OR ' +
+          'user.firstName LIKE :filter OR ' +
+          'user.lastName LIKE :filter OR ' +
           'device.name LIKE :filter)',
         {
           filter: `%${search}%`,
@@ -74,7 +89,6 @@ export class ServiceService {
     const services = await query.getMany();
     const total = await query.getCount();
     const pages = Math.ceil(total / take);
-    console.log({ services });
     return { services, total, pages, page, take };
   }
 
@@ -90,7 +104,6 @@ export class ServiceService {
   }
 
   update(serviceData: UpdateServiceDto) {
-    console.log(serviceData);
     return this.serviceRepository
       .createQueryBuilder()
       .update(Service)

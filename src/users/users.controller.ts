@@ -6,11 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
-import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, GetUserDto, UpdateUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import {
   ApiCreatedResponse,
@@ -40,8 +40,12 @@ export class UsersController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async registerUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.insert(createUserDto);
+  @Roles(Role.ADMIN)
+  async registerUser(
+    @Body() createUserDto: CreateUserDto,
+    @ActiveUser() user: ActiveUserData,
+  ) {
+    return this.usersService.insert({ ...createUserDto, adminId: user.sub });
   }
 
   @Get('/')
@@ -69,14 +73,15 @@ export class UsersController {
   @Get('/:id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  async getUser(@Param('id') id: string): Promise<ResponseUserDto> {
+  async getUser(@Param('id') id: string): Promise<GetUserDto> {
     const user = await this.usersService.findOne(+id);
-    return { ...user };
+    return new GetUserDto(user);
   }
 
-  @Put('/:id')
+  @Patch('/:id')
   @ApiOkResponse({ description: 'The resources were returned successfully' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   async updateUser(
     @Body() updateUserDto: UpdateUserDto,
     @Param('id') id: number,
@@ -86,6 +91,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: number) {
     return this.usersService.remove(id);
   }
