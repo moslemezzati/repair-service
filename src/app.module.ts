@@ -20,7 +20,13 @@ import { SalonModule } from './salon/salon.module';
 import { ConfigModule } from '@nestjs/config';
 import { IamModule } from './iam/iam.module';
 
-//password: @ah367Zaf*IVB8
+// type: 'mysql',
+// host: 'localhost',
+// port: 3306,
+// username: 'ftoolir_repair',
+// password: '@ah367Zaf*IVB8',
+// database: 'ftoolir_repair',
+
 @Module({
   imports: [
     ConfigModule.forRoot(),

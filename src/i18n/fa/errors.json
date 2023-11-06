@@ -1,4 +1,7 @@
 {
   "duplicatedRecord": "موجودیت تکراری می‌باشد",
-  "mobile must be a phone number": "شماره موبایل معتبر نمی‌باشد"
+  "mobile must be a phone number": "شماره موبایل معتبر نمی‌باشد",
+  "The maximum item number must be.": "حداکتر تعداد قطعه میتواند {amount} عدد باشد",
+  "Could not update the item amount.": "نمیتوان مقدار قطعه را تغییر داد.",
+  "Item is not valid": "قطعه وجود ندارد"
 }

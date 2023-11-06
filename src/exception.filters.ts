@@ -48,13 +48,13 @@ export class MessageExceptionFilter implements ExceptionFilter {
       const { message } = exceptionResponse;
       if (Array.isArray(message)) {
         for (const msg of message) {
-          errorMessage.push(i18n.t('errors.' + msg));
+          errorMessage.push(msg);
         }
       } else {
         errorMessage.push(message);
       }
     } else {
-      errorMessage.push(i18n.t('errors.' + exceptionResponse));
+      errorMessage.push(i18n.t(exceptionResponse));
     }
     response.status(exception.getStatus()).send(errorMessage);
   }

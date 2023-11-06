@@ -36,10 +36,9 @@ export class ItemController {
   @Roles(Role.ADMIN)
   create(
     @Body() createItemDto: CreateItemDto,
-    @ActiveUser() { sub }: ActiveUserData,
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    createItemDto.adminId = sub;
-    return this.itemService.create(createItemDto);
+    return this.itemService.create({ ...createItemDto, adminId });
   }
 
   @Get()
