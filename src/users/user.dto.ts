@@ -1,6 +1,6 @@
-import { IsMobilePhone, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { IsMobilePhone, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Role } from './enums/role.enum';
 
 export class CreateUserDto {
@@ -62,6 +62,10 @@ export class ResponseUserDto extends CreateUserDto {}
 
 export class UpdateUserDto extends CreateUserDto {
   id: number;
+
+  @IsOptional()
+  @IsString()
+  password: string;
 }
 
 export class GetUserDto {
