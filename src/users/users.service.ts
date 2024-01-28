@@ -74,6 +74,7 @@ export class UsersService {
   }
 
   async remove(id: number): Promise<void> {
+    await this.usersRepository.query('SET FOREIGN_KEY_CHECKS=0');
     await this.usersRepository.delete(id);
   }
 
