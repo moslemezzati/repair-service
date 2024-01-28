@@ -1,31 +1,33 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
+import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CompanyModule } from './company/company.module';
-import { ItemModule } from './item/item.module';
-import { ServiceModule } from './service/service.module';
-import { MessageModule } from './message/message.module';
-import {
-  MessageExceptionFilter,
-  SQLExceptionFilter,
-} from './exception.filters';
-import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
-import * as path from 'path';
-import { EnglishNumberPip } from './englishNumber.pip';
 import { DeviceModule } from './device/device.module';
-import { SalonModule } from './salon/salon.module';
-import { ConfigModule } from '@nestjs/config';
+import { EnglishNumberPip } from './englishNumber.pip';
+import { HttpExceptionFilter, SQLExceptionFilter } from './exception.filters';
 import { IamModule } from './iam/iam.module';
+import { ItemModule } from './item/item.module';
+import { MessageModule } from './message/message.module';
+import { SalonModule } from './salon/salon.module';
+import { ServiceModule } from './service/service.module';
+import { UsersModule } from './users/users.module';
 
 // type: 'mysql',
 // host: 'localhost',
 // port: 3306,
-// username: 'ftoolir_repair',
+// username: 'ftoolir1_repair',
 // password: '@ah367Zaf*IVB8',
-// database: 'ftoolir_repair',
+// database: 'ftoolir1_repair',
 
 @Module({
   imports: [
@@ -37,9 +39,14 @@ import { IamModule } from './iam/iam.module';
         watch: true,
       },
       resolvers: [
-        { use: QueryResolver, options: ['lang'] },
+        new QueryResolver(['lang', 'l']),
+        new HeaderResolver(['x-custom-lang']),
         AcceptLanguageResolver,
       ],
+      typesOutputPath: path.join(
+        __dirname,
+        '../src/generated/i18n.generated.ts',
+      ),
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -74,7 +81,7 @@ import { IamModule } from './iam/iam.module';
     },
     {
       provide: APP_FILTER,
-      useClass: MessageExceptionFilter,
+      useClass: HttpExceptionFilter,
     },
     {
       provide: APP_PIPE,

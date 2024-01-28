@@ -3,5 +3,9 @@
   "mobile must be a phone number": "شماره موبایل معتبر نمی‌باشد",
   "The maximum item number must be.": "حداکتر تعداد قطعه میتواند {amount} عدد باشد",
   "Could not update the item amount.": "نمیتوان مقدار قطعه را تغییر داد.",
-  "Item is not valid": "قطعه وجود ندارد"
+  "Item is not valid": "قطعه وجود ندارد",
+  "password must be longer than or equal to 8 characters": "رمز باید از 8 کاراکتر بیشتر باشد",
+  "Password does not match": "رمز اشتباه است",
+  "Mobile is wrong": "شماره موبایل اشتباه است",
+  "Mobile is duplicated": "شماره موبایل تکراری است"
 }

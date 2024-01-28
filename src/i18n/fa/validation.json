@@ -1,0 +1,10 @@
+{
+  "NOT_EMPTY": "{property} cannot be empty",
+  "INVALID_EMAIL": "email is invalid",
+  "INVALID_BOOLEAN": "{property} is not a boolean",
+  "MIN": "رمز باید حداقل {constraints.0} باشد",
+  "MAX": "{property} with value: \"{value}\" needs to be less than {constraints.0}, ow and {message}",
+  "mobile": "شماره موبایل معتبر نیست",
+  "passwordLength": "رمز باید حداقل 8 کاراکتر باشد",
+  "Password does not match": "رمز اشتباه است"
+}

@@ -41,7 +41,7 @@ export class AuthenticationService {
     } catch (err) {
       const mysqlUniqueViolationErrorCode = 'ER_DUP_ENTRY';
       if (err.code === mysqlUniqueViolationErrorCode) {
-        throw new ConflictException();
+        throw new UnauthorizedException('Mobile is duplicated');
       }
       return err;
     }
@@ -52,7 +52,7 @@ export class AuthenticationService {
       mobile: signInDto.mobile,
     });
     if (!user) {
-      throw new UnauthorizedException('User does not exist');
+      throw new UnauthorizedException('Mobile is wrong');
     }
     const isEqual = await this.hashingService.compare(
       signInDto.password,
