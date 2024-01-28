@@ -11,7 +11,7 @@ on:
 jobs:
 
   buildAndTest:
-    name: Build & Test
+    name: Install & Sync
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
