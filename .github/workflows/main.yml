@@ -10,14 +10,17 @@ on:
 
 jobs:
 
-  buildAndTest:
-    name: Install & Sync
+  installAndBuildAndSync:
+    name: Install & Build & Sync
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: 🗂️ Install dependencies
         run: yarn
+
+      - name: 🔨 Build
+        run: yarn build
         
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -26,3 +29,4 @@ jobs:
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
           port: 21
+          local-dir: "./dist/"
