@@ -21,6 +21,9 @@ jobs:
 
       - name: 🔨 Build
         run: yarn build
+
+      - name: ❌ Remove unnecessary file and folders
+        run: rm -rf ./dist && ./node_modules
         
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -29,4 +32,3 @@ jobs:
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
           port: 21
-          local-dir: "./dist/"
