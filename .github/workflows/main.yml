@@ -23,7 +23,7 @@ jobs:
         run: yarn build
 
       - name: ❌ Remove unnecessary file and folders
-        run: rm -rf ./dist && ./node_modules
+        run: rm -rf ./dist ./node_modules
         
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
