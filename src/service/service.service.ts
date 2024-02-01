@@ -55,7 +55,9 @@ export class ServiceService {
   }
 
   async create(serviceData: CreateServiceDto) {
-    await this.updateItemAmount(serviceData);
+    if (serviceData.itemId) {
+      await this.updateItemAmount(serviceData);
+    }
     return this.serviceRepository
       .createQueryBuilder()
       .insert()

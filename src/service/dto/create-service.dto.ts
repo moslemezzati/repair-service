@@ -9,11 +9,9 @@ export class CreateServiceDto {
   @IsString()
   name: string;
 
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
+  @ApiProperty({ type: String })
   @IsString()
+  @IsOptional()
   description: string;
 
   @ApiProperty({
@@ -23,26 +21,20 @@ export class CreateServiceDto {
   @IsString()
   serviceDate: string;
 
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
+  @ApiProperty({ type: String })
   @IsNumber()
-  itemId: number;
+  @IsOptional()
+  itemId?: number;
 
-  @ApiProperty({
-    type: String,
-  })
+  @ApiProperty({ type: String })
   @IsNumber()
   @IsOptional()
   userId?: number;
 
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
+  @ApiProperty({ type: String })
   @IsNumber()
-  itemNumber: number;
+  @IsOptional()
+  itemNumber?: number;
 
   @ApiProperty({
     type: String,
