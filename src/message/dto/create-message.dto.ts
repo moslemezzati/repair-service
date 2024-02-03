@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsNumber, IsOptional, IsString} from 'class-validator';
+import {IsOptional, IsString} from 'class-validator';
 import {Role} from "../../users/enums/role.enum";
 
 export class CreateMessageDto {
@@ -23,7 +23,4 @@ export class CreateMessageDto {
 	})
 	@IsString()
 	body: string;
-	
-	@IsNumber()
-	adminId: number;
 }

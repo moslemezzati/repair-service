@@ -25,7 +25,7 @@ export class Message {
 		type: "enum",
 		enum: Role,
 		nullable: true,
-		default: undefined,
+		default: Role.UNKNOWN
 	})
 	@IsString()
 	role?: Role;

@@ -13,7 +13,7 @@ export class MessageService {
 	) {
 	}
 	
-	create(createMessageDto: CreateMessageDto) {
+	create(createMessageDto: CreateMessageDto & { adminId: number }) {
 		return this.messageRepository.save(createMessageDto);
 	}
 	
