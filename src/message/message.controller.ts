@@ -50,9 +50,9 @@ export class MessageController {
       search: string;
       role: string;
     },
-    @ActiveUser() { adminId }: ActiveUserData,
+    @ActiveUser() { adminId, role }: ActiveUserData,
   ) {
-    return this.messageService.findAll({ ...query, adminId });
+    return this.messageService.findAll({ ...query, adminId, role });
   }
 
   @Get(':id')

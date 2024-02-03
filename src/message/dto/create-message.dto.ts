@@ -24,7 +24,6 @@ export class CreateMessageDto {
 	@IsString()
 	body: string;
 	
-	@IsOptional()
 	@IsNumber()
-	adminId?: number;
+	adminId: number;
 }
