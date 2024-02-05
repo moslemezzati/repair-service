@@ -11,7 +11,6 @@ export class CreateServiceDto {
 
   @ApiProperty({ type: String })
   @IsString()
-  @IsOptional()
   description: string;
 
   @ApiProperty({
