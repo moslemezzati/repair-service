@@ -104,6 +104,7 @@ export class ServiceService {
 				'service.description',
 				'service.serviceDate',
 				'service.createdAt',
+				'service.itemNumber',
 				'item',
 				'device',
 				'salon',
