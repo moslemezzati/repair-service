@@ -36,9 +36,7 @@ export class UsersService {
     const query = this.usersRepository.createQueryBuilder('user');
     query
       .leftJoinAndSelect('user.company', 'company')
-      .where('user.role IN (:...roles)', {
-        roles: ['technician', 'worker'],
-      })
+      .where('user.role != :role', { role: 'admin' })
       .select([
         'user.id',
         'user.firstName',

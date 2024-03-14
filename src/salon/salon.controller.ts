@@ -35,12 +35,12 @@ export class SalonController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   create(
     @Body() createSalonDto: CreateSalonDto,
-    @ActiveUser() { sub }: ActiveUserData,
+    @ActiveUser() { adminId }: ActiveUserData,
   ) {
-    createSalonDto.adminId = sub;
+    createSalonDto.adminId = adminId;
     return this.salonService.create(createSalonDto);
   }
 
@@ -70,13 +70,14 @@ export class SalonController {
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.STORE_KEEPER)
   update(@Param('id') id: string, @Body() updateItemDto: UpdateSalonDto) {
     return this.salonService.update(+id, updateItemDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   remove(@Param('id') id: string) {
     return this.salonService.remove(+id);
   }

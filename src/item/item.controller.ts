@@ -33,7 +33,7 @@ export class ItemController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   create(
     @Body() createItemDto: CreateItemDto,
     @ActiveUser() { adminId }: ActiveUserData,
@@ -66,13 +66,14 @@ export class ItemController {
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(Role.STORE_KEEPER)
   update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
     return this.itemService.update(+id, updateItemDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   remove(@Param('id') id: string) {
     return this.itemService.remove(+id);
   }

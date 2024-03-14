@@ -35,7 +35,7 @@ export class DeviceController {
   @ApiCreatedResponse({ description: 'Created Successfully' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   create(
     @Body() createDeviceDto: CreateDeviceDto,
     @ActiveUser() { adminId }: ActiveUserData,
@@ -69,14 +69,14 @@ export class DeviceController {
 
   @Patch(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
     return this.deviceService.update(+id, updateDeviceDto);
   }
 
   @Delete(':id')
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @Roles(Role.ADMIN)
+  @Roles(Role.STORE_KEEPER)
   remove(@Param('id') id: string) {
     return this.deviceService.remove(+id);
   }

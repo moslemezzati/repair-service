@@ -21,7 +21,9 @@ async function bootstrap() {
     new I18nValidationPipe(),
     new ValidationPipe({ transform: true, whitelist: true }),
   );
-  app.useGlobalFilters(new I18nValidationExceptionFilter({detailedErrors: false}));
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({ detailedErrors: false }),
+  );
   await app.listen(process.env.PORT || 3000);
 }
 
