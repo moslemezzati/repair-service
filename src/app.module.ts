@@ -22,6 +22,7 @@ import { SalonModule } from './salon/salon.module';
 import { ServiceModule } from './service/service.module';
 import { UsersModule } from './users/users.module';
 import { config } from 'dotenv';
+import { WarehouseModule } from './warehouse/warehouse.module';
 
 config({ override: true, path: `.env.${process.env.NODE_ENV}` });
 
@@ -63,6 +64,7 @@ config({ override: true, path: `.env.${process.env.NODE_ENV}` });
     MessageModule,
     DeviceModule,
     SalonModule,
+    WarehouseModule,
   ],
   controllers: [AppController],
   providers: [

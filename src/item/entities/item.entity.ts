@@ -22,9 +22,6 @@ export class Item {
   @Column({ nullable: true })
   description: string;
 
-  @Column()
-  amount: number;
-
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'adminId' })
   user: User;
