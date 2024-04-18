@@ -48,6 +48,13 @@ export class Warehouse {
   @Column()
   companyId: number;
 
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'adminId' })
+  user: User;
+
+  @Column()
+  adminId: number;
+
   @CreateDateColumn({
     type: 'timestamp',
     nullable: true,

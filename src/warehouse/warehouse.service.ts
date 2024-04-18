@@ -26,12 +26,12 @@ export class WarehouseService {
                   take = 100,
                   page = 1,
                   search,
-                  inventoryCoordinatorId,
+                  adminId,
                 }: {
     take: number;
     page: number;
     search?: string;
-    inventoryCoordinatorId: number;
+    adminId: number;
   }): Promise<{
     warehouse: Warehouse[];
     total: number;
@@ -44,18 +44,25 @@ export class WarehouseService {
     const query = this.warehouseRepository.createQueryBuilder('warehouse');
     query
       .select()
-      .where('inventoryCoordinatorId = :inventoryCoordinatorId', {
-          inventoryCoordinatorId,
-        },
-      )
+      .where('warehouse.adminId = :adminId', { adminId })
       .leftJoinAndSelect('warehouse.item', 'item')
-      .leftJoinAndSelect('warehouse.company', 'company');
+      .leftJoinAndSelect('warehouse.company', 'company')
+      .leftJoinAndSelect(
+        'warehouse.inventoryCoordinator',
+        'inventoryCoordinator',
+      );
     if (search) {
       query.andWhere(
-        '(itemId LIKE :filter OR companyId LIKE :filter OR type LIKE :filter)',
-        {
-          filter: `%${search}%`,
-        });
+        `(itemId LIKE :filter OR 
+        company.name LIKE :filter OR 
+        type LIKE :filter OR 
+        amount LIKE :filter OR 
+        item.name LIKE :filter OR
+        inventoryCoordinator.firstName LIKE :filter OR
+        inventoryCoordinator.lastName LIKE :filter
+        )`,
+        { filter: `%${search}%` },
+      );
     }
     query.take(take).skip(skip).orderBy('warehouse.createdAt', 'DESC');
     const items = await query.getMany();

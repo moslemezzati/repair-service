@@ -24,4 +24,7 @@ export class CreateWarehouseControllerDto extends CreateWarehouseDto {}
 export class CreateWarehouseServiceDto extends CreateWarehouseDto {
   @IsNumber()
   inventoryCoordinatorId: number;
+
+  @IsNumber()
+  adminId: number;
 }

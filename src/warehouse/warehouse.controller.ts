@@ -22,11 +22,12 @@ export class WarehouseController {
   @Roles(Role.STORE_KEEPER)
   create(
     @Body() createWarehouseDto: CreateWarehouseControllerDto,
-    @ActiveUser() user: ActiveUserData,
+    @ActiveUser() { adminId, sub }: ActiveUserData,
   ) {
     return this.warehouseService.create({
       ...createWarehouseDto,
-      inventoryCoordinatorId: user.sub,
+      inventoryCoordinatorId: sub,
+      adminId,
     });
   }
 
@@ -50,11 +51,11 @@ export class WarehouseController {
       page: number;
       search: string;
     },
-    @ActiveUser() { sub }: ActiveUserData,
+    @ActiveUser() { adminId, sub }: ActiveUserData,
   ) {
     return this.warehouseService.findAll({
       ...query,
-      inventoryCoordinatorId: sub,
+      adminId: adminId || sub,
     });
   }
 
